@@ -1,9 +1,11 @@
-using System;
-using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    private static readonly int Forward = Animator.StringToHash("Forward");
+    private static readonly int Strafe = Animator.StringToHash("Strafe");
     private float horizontal;
     private float vertical;
     private float rotate;
@@ -12,29 +14,43 @@ public class PlayerController : MonoBehaviour
     private float moveSpeed = 5.0f;
     
     [SerializeField]
-    private float rotationSpeed = 200.0f;
+    private float turnSpeed = 200.0f;
+
+    // [SerializeField] 
+    // private Image hpBar;
     
     private Animator animator;
-    
-    void Awake()
-    {
-        
-    }
 
+    private float initHp = 100.0f;
+    
+    [SerializeField]
+    private float currentHp = 100.0f;
+    
+    // 델리게이트 (delegate) : 대리자
+    public delegate void PlayerDieHandler();
+    
+    // 이벤트 정의
+    public static event PlayerDieHandler OnPlayerDie;
+    
+    [SerializeField]
+    private ApplyDamageToPlayer applyDamageToPlayer;
+    
+    [SerializeField]
+    private HealthEventSO healthEventSO;
+    
     void OnEnable()
     {
-        
+        applyDamageToPlayer.Event += OnPlayerDamaged;
     }
 
+    private void OnDisable()
+    {
+        applyDamageToPlayer.Event -= OnPlayerDamaged;
+    }
+    
     void Start()
     {
         animator = gameObject.GetComponent<Animator>();
-    }
-
-    // 물리 엔진의 계산주기
-    void FixedUpdate()
-    {
-        
     }
 
     void Update()
@@ -42,11 +58,30 @@ public class PlayerController : MonoBehaviour
         Move();
         Animate();
     }
+    
+    private void OnPlayerDamaged(Transform player, int damage)
+    {
+        if (currentHp > 0.0f)
+        {
+            currentHp -= (float)damage;
+            
+            healthEventSO.Raise(currentHp);
+            // hpBar.fillAmount = currentHp / initHp;
+            
+            if (currentHp <= 0.0f)
+            {
+                healthEventSO.Raise(0.0f);
+                // hpBar.fillAmount = 0.0f;
+                GameManager.Instance.IsGameOver = true;
+                OnPlayerDie?.Invoke();
+            }
+        }
+    }
 
     private void Animate()
     {
-        animator.SetFloat("Forward", vertical);
-        animator.SetFloat("Strafe", horizontal);
+        animator.SetFloat(Forward, vertical);
+        animator.SetFloat(Strafe, horizontal);
     }
 
     void Move()
@@ -75,14 +110,26 @@ public class PlayerController : MonoBehaviour
         
         Vector3 moveDir = (Vector3.forward * vertical) + (Vector3.right * horizontal);
         transform.Translate(moveDir.normalized * Time.deltaTime * moveSpeed);
-        transform.Rotate(Vector3.up * Time.deltaTime * rotate * rotationSpeed);
+        transform.Rotate(Vector3.up * Time.deltaTime * rotate * turnSpeed);
         
         //Debug.Log($"Horizontal: {horizontal}, Vertical: {vertical}");
     }
 
-    // Update 함수에서 계산된 결과값을 갖고 후 처리작업을 할 때
-    void LateUpdate()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (currentHp > 0.0f && other.CompareTag("Punch"))
+        {
+            OnPlayerDamaged(null, 10);
+        }
     }
+
+    // private void PlayerDie()
+    // {
+    //     GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+    //     foreach (var monster in monsters)
+    //     {
+    //         // monster.SendMessage("OnPlayerDie", SendMessageOptions.DontRequireReceiver);
+    //         monster.GetComponent<MonsterController>().OnPlayerDie();
+    //     }
+    // }
 }

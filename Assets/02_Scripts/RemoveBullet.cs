@@ -2,11 +2,22 @@ using UnityEngine;
 
 public class RemoveBullet : MonoBehaviour
 {
+    [SerializeField] SparkEffectSO sparkEffectSO;
+    
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            Destroy(collision.gameObject);
+            // Destroy(collision.gameObject);
+            collision.gameObject.GetComponent<Bullet>().Release();
+            
+            ContactPoint cp = collision.GetContact(0);
+            Vector3 point = cp.point;
+            Vector3 normal = -cp.normal;
+            Quaternion rot = Quaternion.LookRotation(normal);
+
+            GameObject effect = Instantiate(sparkEffectSO.effectPrefab, point, rot);
+            Destroy(effect, 0.6f);
         }
     }
 }
