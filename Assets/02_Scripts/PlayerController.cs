@@ -38,9 +38,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private HealthEventSO healthEventSO;
     
+    private InputController inputController;
+    
     void OnEnable()
     {
         applyDamageToPlayer.Event += OnPlayerDamaged;
+        inputController.OnMove += ctx => { horizontal = ctx.x; vertical = ctx.y; };
+        inputController.OnRotate += ctx => rotate = ctx * 0.1f;
     }
 
     private void OnDisable()
@@ -48,9 +52,10 @@ public class PlayerController : MonoBehaviour
         applyDamageToPlayer.Event -= OnPlayerDamaged;
     }
     
-    void Start()
+    void Awake()
     {
         animator = gameObject.GetComponent<Animator>();
+        inputController = gameObject.GetComponent<InputController>();
     }
 
     void Update()
@@ -86,9 +91,9 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
-        rotate = Input.GetAxis("Mouse X");
+        // horizontal = Input.GetAxis("Horizontal");
+        // vertical = Input.GetAxis("Vertical");
+        // rotate = Input.GetAxis("Mouse X");
 
         // transform.position += new Vector3(0, 0, 1) * 0.01f;
         // transform.position += new Vector3(1, 0, 0) * 0.01f;

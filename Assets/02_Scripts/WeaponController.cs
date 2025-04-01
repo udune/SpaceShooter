@@ -37,7 +37,7 @@ public class WeaponController : MonoBehaviour
     private bool isReloading = false;
     
     private readonly int hashFire = Animator.StringToHash("Fire");
-    private bool isFire => Input.GetMouseButton(0);
+    private bool isFire = false;
     
     // 카메라 FOV 초깃값 저장
     private float originFOV;
@@ -49,11 +49,15 @@ public class WeaponController : MonoBehaviour
     private CinemachineCamera cinemachineCamera;
     private CinemachinePositionComposer positionComposer;
 
+    private InputController inputController;
+
     private void Start()
     {
         audio = GetComponent<AudioSource>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
         crossHairAnim = transform.Find("CrossHair").GetComponent<Animator>();
+        inputController = GetComponent<InputController>();
+        inputController.OnFire += ctx => isFire = ctx;
         
         var cinemachineObj = GameObject.Find("CinemachineCamera");
         cinemachineCamera = cinemachineObj.GetComponent<CinemachineCamera>();

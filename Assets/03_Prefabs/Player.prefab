@@ -876,6 +876,7 @@ GameObject:
   - component: {fileID: 2329346435569184400}
   - component: {fileID: 7256062914420211217}
   - component: {fileID: 5625625470530932605}
+  - component: {fileID: 9096868364411654313}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1164,6 +1165,31 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &9096868364411654313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4037580461672267323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9725f977485e93142bfc37e2ecae98a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputActions: {fileID: -944628639613478452, guid: a021356b6991e1b43bcf68173e9098ea, type: 3}
+  rotateAction:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Rotate
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 8482ba28-684a-4f02-9ff4-6f13c6a46360
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -3821709235802829964, guid: a021356b6991e1b43bcf68173e9098ea, type: 3}
 --- !u!1 &4082448696135615250
 GameObject:
   m_ObjectHideFlags: 0
