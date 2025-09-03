@@ -9,13 +9,16 @@ public class PoolManager<T> where T : MonoBehaviour
     public PoolManager(T prefab, int defaultCapacity = 10, int maxSize = 20)
     {
         // Pool 객체를 생성
-        pool = new ObjectPool<T>(createFunc: () => Object.Instantiate(prefab),
+        pool = new ObjectPool<T>
+        (
+            createFunc: () => Object.Instantiate(prefab),
             actionOnGet: obj => obj.gameObject.SetActive(true),
             actionOnRelease: obj => obj.gameObject.SetActive(false),
             actionOnDestroy: obj => Object.Destroy(obj.gameObject),
             collectionCheck: true,
             defaultCapacity: defaultCapacity,
-            maxSize: maxSize);
+            maxSize: maxSize
+        );
     }
     
     // 외부에서 접근할 메소드를 선언

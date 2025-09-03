@@ -99,7 +99,7 @@ public class WeaponController : MonoBehaviour
         // 줌 기능
         ChangeFOV();
         // Aim Dot 변경 (몬스터를 조준)
-        // DetectMonster();
+        DetectMonster();
     }
 
     IEnumerator Reload()
@@ -160,8 +160,6 @@ public class WeaponController : MonoBehaviour
 
     private void Fire()
     {
-        //Instantiate(bulletPrefab, firePos.position, firePos.rotation);
-        
         // Pool 총알 가져옴
         var bullet = BulletPool.Instance.pool.Get();
         
